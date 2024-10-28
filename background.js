@@ -4,27 +4,31 @@ let enabled = false;
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.storage.local.set({ isEnabled: enabled });
-  updateContextMenu();
+  chrome.contextMenus.create({
+    title: `${title}${enabled ? '無効にする' : '有効にする'}`,
+    contexts: [context],
+    id: "easyWebBlur"
+  });
 });
 
 // chrome.storageの変更を監視
 chrome.storage.onChanged.addListener((changes) => {
   if (changes.isEnabled) {
     enabled = changes.isEnabled ? changes.isEnabled.newValue : enabled;
-    // console.log(`Change  :`, enabled);
   }
-  updateContextMenu()
+  updateContextMenu();
 });
 
 
 function updateContextMenu() {
   chrome.contextMenus.remove("easyWebBlur", () => {
-    if (chrome.runtime.lastError) { /* エラー無視 */ }
-    chrome.contextMenus.create({
-      title: `${title}${enabled ? 'OFFにする' : 'ONにする'}`,
-      contexts: [context],
-      id: "easyWebBlur"
-    });
+    if (!chrome.runtime.lastError) {
+      chrome.contextMenus.create({
+        title: `${title}${enabled ? '無効にする' : '有効にする'}`,
+        contexts: [context],
+        id: "easyWebBlur"
+      });
+    }
   });
 }
 
