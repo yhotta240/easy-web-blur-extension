@@ -5,64 +5,42 @@ let tooltip = null; // ツールチップ要素を保持する変数
 let selectStyle; // ユーザー選択を無効化するスタイルを保持する変数
 let isToolActive = false;
 
-document.addEventListener('keydown', (e) => {
+const handleBlurTool = (isEnabled) => {
+  if (isEnabled) {
+    showToolTip();
+    addSelect();
+    activateBlurTool();
+  } else {
+    hideToolTip();
+    removeSelect();
+    stopBlurTool();
+  }
+  isToolActive = isEnabled;
+};
+
+chrome.storage.local.get(['settings', 'isEnabled'], (data) => {
+  blurSize = data.settings ? data.settings.blurValue : blurSize;
+  handleBlurTool(data.isEnabled ?? false);
+});
+
+document.addEventListener('keydown', (e) => { // ショートカットキー（Ctrl+B）で起動
   if (e.key === 'b' && e.ctrlKey && !e.shiftKey && !e.altKey) {
     chrome.storage.local.get(['settings', 'isEnabled'], (data) => {
       blurSize = data.settings ? data.settings.blurValue : blurSize;
       const isEnabled = !data.isEnabled;
       chrome.storage.local.set({ settings: data.settings, isEnabled: isEnabled });
-      if (!isEnabled) {
-        showToolTip();
-        addSelect();
-        activateBlurTool();
-        isToolActive = true;
-      } else {
-        hideToolTip();
-        removeSelect();
-        stopBlurTool();
-        isToolActive = false;
-      }
+      handleBlurTool(isEnabled);
     });
   }
 });
 
-chrome.storage.local.get(['settings', 'isEnabled'], (data) => {
-  blurSize = data.settings ? data.settings.blurValue : blurSize;
-  console.log(`現在のblurサイズ:`, blurSize);
-  const isEnabled = data.isEnabled ?? false;
-  if (isEnabled) {
-    showToolTip();
-    addSelect();
-    activateBlurTool();
-    isToolActive = true;
-  } else {
-    hideToolTip();
-    removeSelect();
-    stopBlurTool();
-    isToolActive = false;
-  }
-});
-
 chrome.storage.onChanged.addListener((changes) => {
-  if (changes.isEnabled || changes.settings) {
-    const isEnabled = changes.isEnabled ? changes.isEnabled.newValue : isToolActive;
-    // console.log(`changes.settings.blurValue: `, changes.settings.newValue.blurValue);
+  const isEnabled = changes.isEnabled ? changes.isEnabled.newValue : isToolActive;
+  blurSize = changes.settings ? changes.settings.newValue.blurValue : blurSize;
+  // console.log(`Change storage: ${isEnabled}`);
+  // console.log(`blurSize: ${blurSize}`);
+  handleBlurTool(isEnabled);
 
-    blurSize = changes.settings ? changes.settings.newValue.blurValue : blurSize;
-    console.log(`Change : ${isEnabled}`);
-    console.log(`blurSize: ${blurSize}`);
-    if (isEnabled) {
-      showToolTip();
-      addSelect();
-      activateBlurTool();
-      isToolActive = true;
-    } else {
-      hideToolTip();
-      removeSelect();
-      stopBlurTool();
-      isToolActive = false;
-    }
-  }
 });
 
 
