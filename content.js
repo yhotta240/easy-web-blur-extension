@@ -98,24 +98,30 @@ function updateTooltipPosition(event) {
 
 
 
-function addSelect() {
-  // 選択無効化スタイルの設定
-  selectStyle = document.createElement('style');
-  selectStyle.innerHTML = `
-        * {
-          -webkit-user-select: none;
-          -moz-user-select: none;
-          -ms-user-select: none;
-          user-select: none;
-        }`;
-  document.head.appendChild(selectStyle);
+function addSelect() { 
+  // 既存の選択無効化スタイルの設定
+  if (!selectStyle) { 
+    selectStyle = document.createElement('style');
+    selectStyle.id = 'disable-selection-style';
+    selectStyle.innerHTML = `
+      * {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }`;
+    document.head.appendChild(selectStyle);
+  }
 }
+
 function removeSelect() {
-  if (selectStyle) {
-    document.head.removeChild(selectStyle); // スタイルを削除
+  const styleElement = document.getElementById('disable-selection-style');
+  if (styleElement) {
+    document.head.removeChild(styleElement); // スタイルを削除
     selectStyle = null; // 参照をクリア
   }
 }
+
 
 
 // 選択範囲のオーバーレイ作成と初期設定
