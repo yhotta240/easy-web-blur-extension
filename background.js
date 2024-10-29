@@ -11,7 +11,6 @@ chrome.runtime.onInstalled.addListener(() => {
   });
 });
 
-// chrome.storageの変更を監視
 chrome.storage.onChanged.addListener((changes) => {
   if (changes.isEnabled) {
     enabled = changes.isEnabled ? changes.isEnabled.newValue : enabled;
