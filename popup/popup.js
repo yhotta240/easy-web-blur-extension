@@ -41,10 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
   blurIntensity = document.getElementById('blur-intensity').value;
   // console.log(blurIntensity);
 
-  const extensionLink = document.getElementById('extension_link');
-  if (extensionLink) clickURL(extensionLink);
   const storeLink = document.getElementById('store_link');
-
   if (storeLink) clickURL(storeLink);
 
   // manifest.jsonの情報を取得
@@ -78,11 +75,12 @@ function saveSettings(datetime, message, value) {
 }
 
 function clickURL(link) {
+  const url = link.href ? link.href : link;
+  console.log(url);
   if (link instanceof HTMLElement) {
     link.addEventListener('click', (event) => {
       event.preventDefault(); // デフォルトの動作を防止
-      const url = link.href;
-      // console.log(url);
+
       chrome.tabs.create({ url });
       // console.log("OK");
     });
@@ -116,7 +114,7 @@ function dateTime() {
 function loadSettings() {
 
   chrome.storage.local.get(['settings', 'isEnabled'], (data) => {
-    
+
     let message;
     if (blurElement) {
       blurElement.value = data.settings ? data.settings.blurValue : 5;
