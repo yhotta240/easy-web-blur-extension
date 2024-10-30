@@ -1,8 +1,8 @@
 let mouse = { startX: 0, startY: 0, selecting: false };
 let blurSize = 5;
-let overlays = []; 
-let tooltip = null; 
-let selectStyle; 
+let overlays = [];
+let tooltip = null;
+let selectStyle;
 let isEnabled = false;
 
 const handleBlurTool = (isEnabled) => {
@@ -22,16 +22,16 @@ chrome.storage.local.get(['settings', 'isEnabled'], (data) => {
   handleBlurTool(data.isEnabled ?? false);
 });
 
-document.addEventListener('keydown', (e) => { 
+document.addEventListener('keydown', (e) => {
   if (e.key === 'b' && e.ctrlKey && !e.shiftKey && !e.altKey) {
-    if (chrome.runtime.lastError) {
-      chrome.storage.local.get(['settings', 'isEnabled'], (data) => {
-        blurSize = data.settings ? data.settings.blurValue : blurSize;
-        isEnabled = !data.isEnabled;
-        chrome.storage.local.set({ settings: data.settings, isEnabled: isEnabled });
-        handleBlurTool(isEnabled);
-      });
-    }
+
+    chrome.storage.local.get(['settings', 'isEnabled'], (data) => {
+      blurSize = data.settings ? data.settings.blurValue : blurSize;
+      isEnabled = !data.isEnabled;
+      chrome.storage.local.set({ settings: data.settings, isEnabled: isEnabled });
+      handleBlurTool(isEnabled);
+    });
+
   }
 });
 
@@ -51,7 +51,7 @@ function showToolTip() {
   tooltip = document.createElement('div');
   tooltip.innerHTML = `
     <div style="text-align: center;">
-      <strong>ぼかし:</strong> ON<br>
+      <strong>ぼかし:</strong> 有効<br>
     </div>
     <div>
       - アクティブ: <code>Ctrl+B</code><br>

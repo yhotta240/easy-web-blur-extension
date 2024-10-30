@@ -1,10 +1,10 @@
 {
   "manifest_version": 3,
   "name": "Easy Web Blur - 簡単Webぼかし",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Webサイト上の任意の部分に簡単にぼかし効果を適用できます。",
   "icons": {
-    "48": "icons/icon-on.png"
+    "48": "icons/icon.png"
   },
   "permissions": [
     "tabs",
@@ -12,9 +12,6 @@
     "storage"
   ],
   "action": {
-    "default_icon": {             
-      "16": "icons/icon-off.png"   
-    },
     "default_title": "クリックして開始",
     "default_popup": "popup/popup.html"
   },

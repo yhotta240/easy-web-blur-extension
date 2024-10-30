@@ -24,7 +24,7 @@
 <body class="container pb-3 p-2 ">
 
   <div class="d-flex  my-2 ">
-    <img src="../icons\icon-on.png" class="my-auto mx-2" alt="message clear button" height="28">
+    <img src="../icons\icon.png" class="my-auto mx-2" alt="message clear button" height="28">
     <h3 class="my-auto fs-3">Easy Web Blur - 簡単Webぼかし</h3>
   </div>
 
@@ -65,7 +65,7 @@
         <li class="list-group-item">
           <h5 class="">カスタマイズ</h5>
           <label for="blur-value" class="form-label d-flex">ぼかしの強さ: <div class="ps-2" id="blur-intensity"></div></label>
-          <input type="range" value="5" class="form-range" min="0" max="30" id="blur-value">
+          <input type="range" value="5" class="form-range" min="1" max="30" id="blur-value">
         </li>
         <!-- ファイル形式の選択 -->
         <li class="list-group-item">
@@ -130,7 +130,7 @@
       <ul>
         <li>
           ぼかしの強さ<br>
-          ポップアップ画面からぼかしの強さを設定できる。スライダーで0pxから30pxの範囲で指定し，好みのぼかし具合に調整可能。
+          ポップアップ画面からぼかしの強さを設定できる。スライダーで1pxから30pxの範囲で指定し，好みのぼかし具合に調整可能。
         </li>
       </ul>
       <p class="mb-1 fw-bold">
@@ -145,7 +145,7 @@
           ぼかしの解除<br>
           <ul>
             <li>
-              Ctrl + Z で直前のぼかし操作に戻る
+              Ctrl + Z で直前の状態に戻る
             </li>
             <li>
               ぼかしをかけた部分を直接クリックする
@@ -159,8 +159,7 @@
       style="margin-bottom: 200px;">
       <ul class="list-group list-group-flush">
         <h5 class="pt-3 ps-2 mb-2">詳細</h5>
-        <a class="ps-2 text-end" href="chrome://extensions/"
-          id="extension_link">この拡張機能を管理する</a>
+
         <li class="list-group-item">
           <a class=""
             href="https://chromewebstore.google.com/detail/meet-captions-logger-meet/ngbmoalopgfhbfkjidlblfeheehaniie?authuser=0&hl=ja"
