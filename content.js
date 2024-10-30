@@ -1,8 +1,8 @@
 let mouse = { startX: 0, startY: 0, selecting: false };
 let blurSize = 5;
-let overlays = []; // 追加されたモザイクオーバーレイを保持する配列
-let tooltip = null; // ツールチップ要素を保持する変数
-let selectStyle; // ユーザー選択を無効化するスタイルを保持する変数
+let overlays = []; 
+let tooltip = null; 
+let selectStyle; 
 let isEnabled = false;
 
 const handleBlurTool = (isEnabled) => {
@@ -22,24 +22,23 @@ chrome.storage.local.get(['settings', 'isEnabled'], (data) => {
   handleBlurTool(data.isEnabled ?? false);
 });
 
-document.addEventListener('keydown', (e) => { // ショートカットキー（Ctrl+B）で起動
+document.addEventListener('keydown', (e) => { 
   if (e.key === 'b' && e.ctrlKey && !e.shiftKey && !e.altKey) {
-    chrome.storage.local.get(['settings', 'isEnabled'], (data) => {
-      blurSize = data.settings ? data.settings.blurValue : blurSize;
-      isEnabled = !data.isEnabled;
-      chrome.storage.local.set({ settings: data.settings, isEnabled: isEnabled });
-      handleBlurTool(isEnabled);
-    });
+    if (chrome.runtime.lastError) {
+      chrome.storage.local.get(['settings', 'isEnabled'], (data) => {
+        blurSize = data.settings ? data.settings.blurValue : blurSize;
+        isEnabled = !data.isEnabled;
+        chrome.storage.local.set({ settings: data.settings, isEnabled: isEnabled });
+        handleBlurTool(isEnabled);
+      });
+    }
   }
 });
 
 chrome.storage.onChanged.addListener((changes) => {
   isEnabled = changes.isEnabled ? changes.isEnabled.newValue : isEnabled;
   blurSize = changes.settings ? changes.settings.newValue.blurValue : blurSize;
-  // console.log(`Change storage: ${isEnabled}`);
-  // console.log(`blurSize: ${blurSize}`);
   handleBlurTool(isEnabled);
-
 });
 
 
@@ -53,7 +52,6 @@ function showToolTip() {
   tooltip.innerHTML = `
     <div style="text-align: center;">
       <strong>ぼかし:</strong> ON<br>
-      <p> </p>
     </div>
     <div>
       - アクティブ: <code>Ctrl+B</code><br>
