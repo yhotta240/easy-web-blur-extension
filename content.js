@@ -3,7 +3,7 @@ let blurSize = 5;
 let overlays = []; // 追加されたモザイクオーバーレイを保持する配列
 let tooltip = null; // ツールチップ要素を保持する変数
 let selectStyle; // ユーザー選択を無効化するスタイルを保持する変数
-let isToolActive = false;
+let isEnabled = false;
 
 const handleBlurTool = (isEnabled) => {
   if (isEnabled) {
@@ -15,7 +15,6 @@ const handleBlurTool = (isEnabled) => {
     removeSelect();
     stopBlurTool();
   }
-  isToolActive = isEnabled;
 };
 
 chrome.storage.local.get(['settings', 'isEnabled'], (data) => {
@@ -27,7 +26,7 @@ document.addEventListener('keydown', (e) => { // ショートカットキー（C
   if (e.key === 'b' && e.ctrlKey && !e.shiftKey && !e.altKey) {
     chrome.storage.local.get(['settings', 'isEnabled'], (data) => {
       blurSize = data.settings ? data.settings.blurValue : blurSize;
-      const isEnabled = !data.isEnabled;
+      isEnabled = !data.isEnabled;
       chrome.storage.local.set({ settings: data.settings, isEnabled: isEnabled });
       handleBlurTool(isEnabled);
     });
@@ -35,7 +34,7 @@ document.addEventListener('keydown', (e) => { // ショートカットキー（C
 });
 
 chrome.storage.onChanged.addListener((changes) => {
-  const isEnabled = changes.isEnabled ? changes.isEnabled.newValue : isToolActive;
+  isEnabled = changes.isEnabled ? changes.isEnabled.newValue : isEnabled;
   blurSize = changes.settings ? changes.settings.newValue.blurValue : blurSize;
   // console.log(`Change storage: ${isEnabled}`);
   // console.log(`blurSize: ${blurSize}`);
@@ -98,9 +97,9 @@ function updateTooltipPosition(event) {
 
 
 
-function addSelect() { 
+function addSelect() {
   // 既存の選択無効化スタイルの設定
-  if (!selectStyle) { 
+  if (!selectStyle) {
     selectStyle = document.createElement('style');
     selectStyle.id = 'disable-selection-style';
     selectStyle.innerHTML = `
@@ -126,7 +125,6 @@ function removeSelect() {
 
 // 選択範囲のオーバーレイ作成と初期設定
 const selBox = document.createElement('div');
-// const overlay = document.createElement('div');
 
 function activateBlurTool() {
   // 選択範囲ボックスの初期設定
@@ -197,10 +195,8 @@ function onMouseUp() {
 
 }
 
-// ブラー効果を適用する関数
+// ブラー効果を適用する
 function applyBlur(rect) {
-  // オーバーレイのスタイル設定
-  // 選択範囲が点（幅と高さが 0）なら処理を無視
   const width = rect.right - rect.left;
   const height = rect.bottom - rect.top;
   if (width <= 10 || height <= 10) return;
@@ -224,7 +220,7 @@ function applyBlur(rect) {
 }
 // オーバーレイクリック削除リスナー
 document.addEventListener('click', (e) => {
-  if (!isToolActive) return;
+  if (!isEnabled) return;
   const target = e.target;
   if (overlays.includes(target)) {
     target.remove();
@@ -234,7 +230,7 @@ document.addEventListener('click', (e) => {
 
 // Ctrl+Zで最後のオーバーレイ削除リスナー
 document.addEventListener('keydown', (e) => {
-  if (!isToolActive || !(e.ctrlKey && e.key === 'z')) return;
+  if (!isEnabled || !(e.ctrlKey && e.key === 'z')) return;
   const lastOverlay = overlays.pop();
   if (lastOverlay) lastOverlay.remove();
 });
