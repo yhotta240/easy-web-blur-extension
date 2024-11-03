@@ -48,11 +48,11 @@ document.addEventListener('DOMContentLoaded', function () {
     if (messagePanel.style.height === panelHeight) {
       // パネルが開いている場合は閉じる
       messagePanel.style.height = '0';
-      panelButton.textContent   = 'メッセージパネルを開く';
+      panelButton.textContent = 'メッセージパネルを開く';
     } else {
       // パネルが閉じている場合は開く
       messagePanel.style.height = panelHeight;
-      panelButton.textContent   = 'メッセージパネルを閉じる';
+      panelButton.textContent = 'メッセージパネルを閉じる';
     }
   });
 
@@ -68,6 +68,21 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('extension-name').textContent = `${manifestData.name}`;
   document.getElementById('extension-version').textContent = `${manifestData.version}`;
   document.getElementById('extension-description').textContent = `${manifestData.description}`;
+  chrome.permissions.getAll((result) => {
+    let siteAccess;
+    if (result.origins.length > 0) {
+      if (result.origins.includes("<all_urls>")) {
+        siteAccess = "すべてのサイト";
+      } else {
+        siteAccess = result.origins.join("<br>");
+      }
+    } else {
+      siteAccess = "クリックされた場合のみ";
+    }
+    document.getElementById('site-access').innerHTML = siteAccess;
+  });
+  
+
   chrome.extension.isAllowedIncognitoAccess((isAllowedAccess) => {
     document.getElementById('incognito-enabled').textContent = `${isAllowedAccess ? '有効' : '無効'}`;
   });
