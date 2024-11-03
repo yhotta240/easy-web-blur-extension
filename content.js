@@ -1,5 +1,5 @@
 let mouse = { startX: 0, startY: 0, selecting: false };
-let blurSize = 5;
+let blurValue = 5;
 let overlays = [];
 let tooltip = null;
 let selectStyle;
@@ -18,26 +18,26 @@ const handleBlurTool = (isEnabled) => {
 };
 
 chrome.storage.local.get(['settings', 'isEnabled'], (data) => {
-  blurSize = data.settings ? data.settings.blurValue : blurSize;
-  handleBlurTool(data.isEnabled ?? false);
+  isEnabled = data.isEnabled ? data.isEnabled : isEnabled;
+  blurValue = data.settings ? data.settings.blurValue : blurValue;
+  handleBlurTool(data.isEnabled ? true : false);
 });
 
 document.addEventListener('keydown', (e) => {
   if (e.key === 'b' && e.ctrlKey && !e.shiftKey && !e.altKey) {
 
     chrome.storage.local.get(['settings', 'isEnabled'], (data) => {
-      blurSize = data.settings ? data.settings.blurValue : blurSize;
       isEnabled = !data.isEnabled;
+      blurValue = data.settings ? data.settings.blurValue : blurValue;
       chrome.storage.local.set({ settings: data.settings, isEnabled: isEnabled });
       handleBlurTool(isEnabled);
     });
-
   }
 });
 
 chrome.storage.onChanged.addListener((changes) => {
   isEnabled = changes.isEnabled ? changes.isEnabled.newValue : isEnabled;
-  blurSize = changes.settings ? changes.settings.newValue.blurValue : blurSize;
+  blurValue = changes.settings ? changes.settings.newValue.blurValue : blurValue;
   handleBlurTool(isEnabled);
 });
 
@@ -118,7 +118,6 @@ function removeSelect() {
     selectStyle = null; // 参照をクリア
   }
 }
-
 
 
 // 選択範囲のオーバーレイ作成と初期設定
@@ -209,7 +208,7 @@ function applyBlur(rect) {
     pointerEvents: 'auto',
     zIndex: '2147483646',
     backgroundColor: 'transparent',
-    backdropFilter: `blur(${blurSize}px)`
+    backdropFilter: `blur(${blurValue}px)`
   });
   // console.log(overlays);
   document.body.appendChild(overlay);
