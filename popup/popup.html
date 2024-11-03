@@ -7,18 +7,6 @@
   <title>Easy Web Blur - 簡単Webぼかし</title>
   <link rel="stylesheet" href="bootstrap-5.3.0-dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="popup.css">
-  <style>
-    html {
-      font-size: 0.8rem;
-    }
-
-    html,
-    body {
-      width: 26rem;
-      min-width: 26rem;
-      margin: 0;
-    }
-  </style>
 </head>
 
 <body class="container pb-3 p-2 ">
@@ -239,13 +227,13 @@
 
   </div>
 
-  <!-- 固定フッターとしての開閉パネル -->
+  <!-- メッセージパネル -->
   <div class="fixed-bottom bg-dark text-white">
-    <button class="btn btn-dark btn-sm p-0 w-100" id="toggleButton">
+    <button class="btn btn-dark btn-sm p-0 w-100" id="panelButton">
       メッセージパネルを開く
     </button>
     <!-- メッセージ -->
-    <div id="bottomPanel" class="bg-light text-dark p-1 overflow-auto">
+    <div id="messagePanel" class="bg-light text-dark p-1 overflow-auto">
       <div class="d-flex justify-content-between">
         <div class="fw-light py-auto">メッセージ</div>
         <button type="button" class="btn btn-light btn-sm" id="messageClearButton">
@@ -256,7 +244,7 @@
       <div id="message" style="border: 1px solid #ccc; padding: 10px; height: 200px; overflow-y: auto;"></div>
     </div>
   </div>
-  </div>
+
 
   <!-- スクリプトのリンク -->
   <script src="bootstrap-5.3.0-dist/js/bootstrap.bundle.min.js"></script>
