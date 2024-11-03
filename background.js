@@ -1,50 +1,38 @@
 let context = 'all';
 let title = 'Easy Web Blur: ';
-let enabled = false;
+let isEnabled = false;
+
 
 chrome.runtime.onInstalled.addListener(() => {
-  chrome.storage.local.set({ isEnabled: enabled });
+  chrome.storage.local.set({ isEnabled: isEnabled });
   chrome.contextMenus.create({
-    title: `${title}${enabled ? '無効にする' : '有効にする'}`,
+    title: `${title}${isEnabled ? '無効にする' : '有効にする'}`,
     contexts: [context],
     id: "easyWebBlur"
   });
 });
 
+
 chrome.storage.onChanged.addListener((changes) => {
   if (changes.isEnabled) {
-    enabled = changes.isEnabled ? changes.isEnabled.newValue : enabled;
+    isEnabled = changes.isEnabled.newValue;
   }
   updateContextMenu();
 });
 
 
-function updateContextMenu() {
-  chrome.contextMenus.remove("easyWebBlur", () => {
-    if (!chrome.runtime.lastError) {
-      chrome.contextMenus.create({
-        title: `${title}${enabled ? '無効にする' : '有効にする'}`,
-        contexts: [context],
-        id: "easyWebBlur"
-      });
-    }
-  });
-}
-
 chrome.contextMenus.onClicked.addListener((info) => {
   if (info.menuItemId === "easyWebBlur") {
-    enabled = !enabled;
-    // console.log(`現在の状態: ${enabled ? 'ON' : 'OFF'}`);
-    chrome.storage.local.set({ isEnabled: enabled });
+    isEnabled = !isEnabled;
+    chrome.storage.local.set({ isEnabled: isEnabled });
     updateContextMenu();
   }
 });
 
 chrome.runtime.onMessage.addListener((msg) => {
   if (msg.keyEnabled) {
-    enabled = !enabled;
-    // console.log(`現在の状態: ${enabled ? 'ON' : 'OFF'}`);
-    chrome.storage.local.set({ isEnabled: enabled });
+    isEnabled = !isEnabled;
+    chrome.storage.local.set({ isEnabled: isEnabled });
     updateContextMenu();
   }
 });
@@ -52,9 +40,21 @@ chrome.runtime.onMessage.addListener((msg) => {
 chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
   if (changeInfo.status === 'complete') {
     chrome.storage.local.get('isEnabled', (data) => {
-      enabled = data.isEnabled ?? false;
-      // console.log("ページがリロードされました。", `現在の状態: ${enabled ? 'ON' : 'OFF'}`);
+      isEnabled = data.isEnabled ? data.isEnabled : isEnabled;
       updateContextMenu();
     });
   }
 });
+
+
+function updateContextMenu() {
+  chrome.contextMenus.remove("easyWebBlur", () => {
+    if (!chrome.runtime.lastError) {
+      chrome.contextMenus.create({
+        title: `${title}${isEnabled ? '無効にする' : '有効にする'}`,
+        contexts: [context],
+        id: "easyWebBlur"
+      });
+    }
+  });
+}
