@@ -1,4 +1,15 @@
-#bottomPanel {
+html {
+  font-size: 0.8rem;
+}
+
+html,
+body {
+  width: 26rem;
+  min-width: 26rem;
+  margin: 0;
+}
+
+#messagePanel {
   height: 0;
   overflow: hidden;
   transition: height 0.3s ease;
