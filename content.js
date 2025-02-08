@@ -28,7 +28,7 @@ chrome.storage.local.get(['settings', 'isEnabled', 'clickEnabled'], (data) => {
 });
 
 document.addEventListener('keydown', (e) => {
-  console.log('keydown', e.key, e.ctrlKey, e.shiftKey, e.altKey);
+  // console.log('keydown', e.key, e.ctrlKey, e.shiftKey, e.altKey);
   if (e.key === 'b' && e.ctrlKey && !e.shiftKey && !e.altKey) {
 
     chrome.storage.local.get(['settings', 'isEnabled'], (data) => {
@@ -39,13 +39,10 @@ document.addEventListener('keydown', (e) => {
     });
   }
   if (e.key === 'E' && !e.ctrlKey && e.shiftKey && !e.altKey && isEnabled) {
-    console.log('clickEnabled key', clickEnabled);
+    // console.log('clickEnabled key', clickEnabled);
     chrome.storage.local.get(['clickEnabled'], (data) => {
       clickEnabled = !data.clickEnabled;
-      chrome.storage.local.set({ clickEnabled: clickEnabled }, () => {
-        // const clickEnabledSpan = document.getElementById('click-enabled');
-        // clickEnabledSpan.innerHTML = clickEnabled ? '有効' : '無効';
-      });
+      chrome.storage.local.set({ clickEnabled: clickEnabled });
     });
   }
 });
@@ -63,13 +60,11 @@ chrome.storage.onChanged.addListener((changes) => {
 });
 
 const clickEventHandler = (e) => {
-  console.log('clickEnabled', clickEnabled);
   if (clickEnabled) return;
   e.preventDefault();
 };
 
 function disableDefaultClickActions() {
-  console.log('clickEnabled', clickEnabled);
   document.addEventListener('click', clickEventHandler, true);
 }
 
