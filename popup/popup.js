@@ -60,7 +60,13 @@ document.addEventListener('DOMContentLoaded', function () {
   // console.log(blurValue);
 
   const storeLink = document.getElementById('store_link');
+  storeLink.href = `https://chrome.google.com/webstore/detail/${chrome.runtime.id}`;
   if (storeLink) clickURL(storeLink);
+  const extensionLink = document.getElementById('extension_link');
+  extensionLink.href = `chrome://extensions/?id=${chrome.runtime.id}`;
+  if (extensionLink) clickURL(extensionLink);
+  const issueLink = document.getElementById('issue-link');
+  if (issueLink) clickURL(issueLink);
   // manifest.jsonの情報を取得
   const manifestData = chrome.runtime.getManifest();
   // 各情報を要素に反映
