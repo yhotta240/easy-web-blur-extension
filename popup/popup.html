@@ -52,6 +52,12 @@
         <!-- ファイル名の入力 -->
         <li class="list-group-item">
           <h5 class="">カスタマイズ</h5>
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" value="" id="click-enabled">
+            <label class="form-check-label" for="click-enabled">
+              リンクやボタンのクリック動作を許可する
+            </label>
+          </div>
           <label for="blur-value" class="form-label d-flex">ぼかしの強さ: <div class="ps-2" id="blur-intensity"></div></label>
           <input type="range" value="5" class="form-range" min="1" max="30" id="blur-value">
         </li>
@@ -61,6 +67,9 @@
           <ul class="my-2 ">
             <li>
               アクティブ: <code>Ctrl+B</code><br>
+            </li>
+            <li>
+              クリック動作: <code>Shift+E</code><br>
             </li>
             <li>
               前に戻す: <code>Ctrl+Z</code><br>
@@ -78,15 +87,15 @@
     <div class="tab-pane fade mt-2 mx-2" id="description" role="tabpanel" style="margin-bottom: 180px;"
       aria-labelledby="description-tab">
       <div>
-        <h5>Webサイト上の任意の部分に簡単にぼかし効果を適用できます。</h5>
+        <h5>Webサイト上の任意の部分に簡単にぼかし効果を適用できます．</h5>
         <p class="my-1 fw-bold">説明:</p>
         <p>
-          このChrome拡張機能を使えば，Webサイト上の任意の部分を簡単にぼかしを入れることができます。プライバシー保護や見られたくない内容を隠すのに最適です。
+          このChrome拡張機能を使えば，Webサイト上の任意の部分を簡単にぼかしを入れることができます．プライバシー保護や見られたくない内容を隠すのに最適です．
         </p>
         <p class="my-1 fw-bold">拡張機能の主な特徴:</p>
-        <p class="mt-1">選択範囲をドラッグするだけでぼかしを適用できます。操作は直感的で，わずかな手順で画面上のコンテンツを隠すことが可能です。</p>
+        <p class="mt-1">選択範囲をドラッグするだけでぼかしを適用できます．操作は直感的で，わずかな手順で画面上のコンテンツを隠すことが可能です．</p>
         <p class="my-1 fw-bold">注意点:</p>
-        <p class="mt-1">特定のサイトでは，拡張機能が正常に動作しない場合があります。対応していないサイトでは，ぼかし効果が適用されない可能性がありますのでご注意ください。</p>
+        <p class="mt-1">特定のサイトでは，拡張機能が正常に動作しない場合があります．対応していないサイトでは，ぼかし効果が適用されない可能性がありますのでご注意ください．</p>
       </div>
     </div>
     <!-- チュートリアル -->
@@ -95,10 +104,10 @@
       <p class="mb-1 fw-bold">
         拡張機能を有効にする
       <ol>
-        <li>PCで Chrome を開きます。</li>
+        <li>PCで Chrome を開きます．</li>
         <li>右上の [拡張機能] <img src="https://storage.googleapis.com/support-kms-prod/pPIeCzvFrMFIBxrrrWuHfxU58Rx9xBLyyv7F"
-            alt="拡張機能" height="18"> を選択します。</li>
-        <li>「Easy Web Blur - 簡単Webぼかし」を選択します。（固定を指定しておくと，常に表示されます）</li>
+            alt="拡張機能" height="18"> を選択します．</li>
+        <li>「Easy Web Blur - 簡単Webぼかし」を選択します．（固定を指定しておくと，常に表示されます）</li>
       </ol>
       </p>
 
@@ -111,14 +120,18 @@
         <li> Ctrl + B で，拡張機能を素早く有効化</li>
         <li>Webページ上で右クリックし，メニューから「Easy Web Blur：有効にする」を選択する</li>
       </ul>
-      <div class="mb-3">無効にする場合も同じ操作を行ってください。</div>
+      <div class="mb-3">無効にする場合も同じ操作を行ってください．</div>
       <p class="mb-1 fw-bold">
         設定
       </p>
       <ul>
         <li>
+          リンクやボタンのクリック動作を許可する<br>
+          「リンクやボタンのクリック動作を許可する」を有効にすると，ツール有効時でも通常のクリック動作（リンクの遷移やボタンの動作）が実行されます．無効にすると，クリックしても動作しなくなります．
+        </li>
+        <li>
           ぼかしの強さ<br>
-          ポップアップ画面からぼかしの強さを設定できる。スライダーで1pxから30pxの範囲で指定し，好みのぼかし具合に調整可能。
+          ポップアップ画面からぼかしの強さを設定できる．スライダーで1pxから30pxの範囲で指定し，好みのぼかし具合に調整可能．
         </li>
       </ul>
       <p class="mb-1 fw-bold">
@@ -185,7 +198,7 @@
         </li>
         <li class="list-group-item">
           <p>サイトへのアクセス:</p>
-          <p id="permission-info">アクセスしたウェブサイト上にある自分の全データの読み取りと変更をこの拡張機能に許可します。</p>
+          <p id="permission-info">アクセスしたウェブサイト上にある自分の全データの読み取りと変更をこの拡張機能に許可します．</p>
           <div id="site-access">Checking...</div>
         </li>
         </li>
@@ -216,8 +229,8 @@
       </ul>
       <div class="ps-0 " style="margin-bottom: 180px;">
         <h5 class="ps-1">プライバシー</h5>
-        <p class="ps-3">お客様のデータを収集または使用しないことを表明しています。</p>
-        <p class="ps-3">お客様のデータについて以下を宣言します。</p>
+        <p class="ps-3">お客様のデータを収集または使用しないことを表明しています．</p>
+        <p class="ps-3">お客様のデータについて以下を宣言します．</p>
         <div class="m-2">
           <ul>
             <li>
