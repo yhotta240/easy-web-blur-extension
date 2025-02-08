@@ -4,26 +4,31 @@ let overlays = [];
 let tooltip = null;
 let selectStyle;
 let isEnabled = false;
+let clickEnabled = false;
 
 const handleBlurTool = (isEnabled) => {
   if (isEnabled) {
     showToolTip();
     addSelect();
     activateBlurTool();
+    disableDefaultClickActions();
   } else {
     hideToolTip();
     removeSelect();
     stopBlurTool();
+    enableDefaultClickActions();
   }
 };
 
-chrome.storage.local.get(['settings', 'isEnabled'], (data) => {
+chrome.storage.local.get(['settings', 'isEnabled', 'clickEnabled'], (data) => {
   isEnabled = data.isEnabled ? data.isEnabled : isEnabled;
   blurValue = data.settings ? data.settings.blurValue : blurValue;
+  clickEnabled = data.clickEnabled ? data.clickEnabled : clickEnabled;
   handleBlurTool(data.isEnabled ? true : false);
 });
 
 document.addEventListener('keydown', (e) => {
+  console.log('keydown', e.key, e.ctrlKey, e.shiftKey, e.altKey);
   if (e.key === 'b' && e.ctrlKey && !e.shiftKey && !e.altKey) {
 
     chrome.storage.local.get(['settings', 'isEnabled'], (data) => {
@@ -33,14 +38,44 @@ document.addEventListener('keydown', (e) => {
       handleBlurTool(isEnabled);
     });
   }
+  if (e.key === 'E' && !e.ctrlKey && e.shiftKey && !e.altKey && isEnabled) {
+    console.log('clickEnabled key', clickEnabled);
+    chrome.storage.local.get(['clickEnabled'], (data) => {
+      clickEnabled = !data.clickEnabled;
+      chrome.storage.local.set({ clickEnabled: clickEnabled }, () => {
+        // const clickEnabledSpan = document.getElementById('click-enabled');
+        // clickEnabledSpan.innerHTML = clickEnabled ? '有効' : '無効';
+      });
+    });
+  }
 });
+
 
 chrome.storage.onChanged.addListener((changes) => {
   isEnabled = changes.isEnabled ? changes.isEnabled.newValue : isEnabled;
   blurValue = changes.settings ? changes.settings.newValue.blurValue : blurValue;
+  clickEnabled = changes.clickEnabled ? changes.clickEnabled.newValue : clickEnabled;
+  const clickEnabledSpan = document.getElementById('click-enabled');
+  clickEnabledSpan.innerHTML = clickEnabled ? '有効' : '無効';
+  const blurIntensitySpan = document.getElementById('blur-intensity');
+  blurIntensitySpan.innerHTML = blurValue;
   handleBlurTool(isEnabled);
 });
 
+const clickEventHandler = (e) => {
+  console.log('clickEnabled', clickEnabled);
+  if (clickEnabled) return;
+  e.preventDefault();
+};
+
+function disableDefaultClickActions() {
+  console.log('clickEnabled', clickEnabled);
+  document.addEventListener('click', clickEventHandler, true);
+}
+
+function enableDefaultClickActions() {
+  document.removeEventListener('click', clickEventHandler, true);
+}
 
 
 function showToolTip() {
@@ -52,9 +87,12 @@ function showToolTip() {
   tooltip.innerHTML = `
     <div style="text-align: center;">
       <strong>ぼかし:</strong> 有効<br>
+      <strong>クリック動作:</strong><span id="click-enabled"> ${clickEnabled ? '有効' : '無効'}</span><br>
+      <strong>ぼかしの強さ:</strong> <span id="blur-intensity"> ${blurValue}px</span><br>
     </div>
     <div>
       - アクティブ: <code>Ctrl+B</code><br>
+      - クリック動作: <code>Shift+E</code><br>
       - 前に戻す: <code>Ctrl+Z</code><br>
       - ぼかし解除: 直接クリック<br>
     </div>
