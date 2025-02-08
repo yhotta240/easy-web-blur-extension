@@ -6,12 +6,20 @@ const blurElement = document.getElementById('blur-value');
 const panelButton = document.getElementById('panelButton');
 const messagePanel = document.getElementById('messagePanel');
 const messageDiv = document.getElementById('message');
+const clickEnabledElement = document.getElementById('click-enabled');
 
 
 blurEnabledElement.addEventListener('change', (event) => {
   isEnabled = event.target.checked;
   chrome.storage.local.set({ isEnabled: isEnabled }, () => {
     messageOutput(dateTime(), isEnabled ? 'Easy Web Blurは有効になっています' : 'Easy Web Blurは無効になっています');
+  });
+});
+
+
+clickEnabledElement.addEventListener('change', (event) => {
+  chrome.storage.local.set({ clickEnabled: event.target.checked }, () => {
+    messageOutput(dateTime(), clickEnabledElement.checked ? 'クリック動作が許可されています' : 'クリック動作が許可されていません');
   });
 });
 
@@ -23,19 +31,23 @@ blurElement.addEventListener('change', (event) => {
 });
 
 
-chrome.storage.local.get(['settings', 'isEnabled'], (data) => {
+chrome.storage.local.get(['settings', 'isEnabled', 'clickEnabled'], (data) => {
 
+  if (blurEnabledElement) {
+    isEnabled = data.isEnabled || false;
+    blurEnabledElement.checked = isEnabled;
+  }
+  messageOutput(dateTime(), isEnabled ? 'Easy Web Blurは有効になっています' : 'Easy Web Blurは無効になっています');
+  if (clickEnabledElement) {
+    clickEnabledElement.checked = data.clickEnabled || false;
+    messageOutput(dateTime(), clickEnabledElement.checked ? 'クリック動作が許可されています' : 'クリック動作が許可されていません');
+  }
   let message;
   if (blurElement) {
     blurElement.value = data.settings ? data.settings.blurValue : 5;
     document.getElementById('blur-intensity').innerHTML = blurElement.value;
     message = `ぼかしの強さ ${blurElement.value}px`;
   }
-  if (blurEnabledElement) {
-    isEnabled = data.isEnabled || false;
-    blurEnabledElement.checked = isEnabled;
-  }
-  messageOutput(dateTime(), isEnabled ? 'Easy Web Blurは有効になっています' : 'Easy Web Blurは無効になっています');
   messageOutput(dateTime(), message);
 });
 
@@ -87,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     document.getElementById('site-access').innerHTML = siteAccess;
   });
-  
+
 
   chrome.extension.isAllowedIncognitoAccess((isAllowedAccess) => {
     document.getElementById('incognito-enabled').textContent = `${isAllowedAccess ? '有効' : '無効'}`;
